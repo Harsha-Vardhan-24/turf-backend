@@ -10,6 +10,7 @@ const {
 const {
   fetchCourtsWithLocation,
 } = require("../controllers/court/fetchCourtsWithLocation");
+const { getLocations } = require("../controllers/court/getLocations");
 const router = express.Router();
 
 router.post("/add", upload.array("files"), addCourt);
@@ -19,6 +20,8 @@ router.put("/edit/:adminId/:courtId", upload.array("files"), editCourt);
 router.get("/fetch/:courtId", fetchCourtWithCourtId);
 
 router.get("/fetch/all/:location", fetchCourtsWithLocation);
+
+router.get("/getLocations", getLocations);
 
 router.get("/uploads/:adminId/:courtId/:imageName", (req, res) => {
   const { adminId, courtId, imageName } = req.params;
