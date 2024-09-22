@@ -134,8 +134,19 @@ const editCourt = async (req, res) => {
     const deleteImagesQuery = `DELETE FROM court_images WHERE court_id = $1`;
     await client.query(deleteImagesQuery, [courtId]);
 
+    const removeFolder = path.join(
+      __dirname,
+      `../../uploads/${userId}/${courtId}`
+    );
+
+    if (fs.existsSync(removeFolder)) {
+      fs.rm(removeFolder, { recursive: true });
+    }
     if (courtImages && courtImages.length > 0) {
-      const uploadDir = path.join(__dirname, "../../uploads");
+      const uploadDir = path.join(
+        __dirname,
+        `../../uploads/${userId}/${courtId}`
+      );
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
@@ -152,7 +163,7 @@ const editCourt = async (req, res) => {
           .webp({ quality: 80 }) // Convert to WebP format
           .toFile(path.join(uploadDir, fileName));
 
-        const imageUrl = `/uploads/${fileName}`;
+        const imageUrl = `${fileName}`;
         await client.query(courtImagesQuery, [courtId, imageUrl]);
       }
     }

@@ -53,7 +53,7 @@ const fetchCourtsWithLocation = async (req, res) => {
 
           // Get images specific to this court
           const courtImagesData = getImagesRes.rows[0] || []; // Use all images, or an empty array if none
-
+          // console.log(courtData);
           // Combine all data into courtData
           courtData = {
             ...courtData,
@@ -71,6 +71,12 @@ const fetchCourtsWithLocation = async (req, res) => {
 
     // console.log(courtsData);
     await db.query("COMMIT");
+
+    // sort the data accoringly:
+    courtsData.sort((a, b) => {
+      return b.featured - a.featured;
+    });
+
     res.status(200).json({
       message: "Success",
       courtsData,
